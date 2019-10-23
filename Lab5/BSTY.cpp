@@ -20,7 +20,41 @@ BSTY::BSTY() {
 // adjustHeights method that will update the heights of all the 
 // ancestors of the node that was just inserted.
 bool BSTY:: insertit(string x ) {
-	
+	if(root==NULL){
+		NodeT *t=new NodeT(x);
+		root=t;
+		return true;
+	}
+	else{
+		NodeT *n=root;
+		while(n!= NULL){
+			if(x<n->data){
+				if(n->left==NULL){
+					n->left=new NodeT(x);
+					n->left->parent=n;
+					adjustHeights(n->left);
+					return true;
+				}
+				else{
+					n=n->left;
+				}
+			}
+			else if(x>n->data){
+				if(n->right==NULL){
+					n->right=new NodeT(x);
+					n->right->parent=n;
+					adjustHeights(n->right);
+					return true;
+				}
+				else{
+					n=n->right;
+				}
+			}
+			else{
+				return false;
+			}
+		}
+	}
 }
 
 // the adjustHeights method updates the heights of every ancestor of the node n.
@@ -36,19 +70,16 @@ bool BSTY:: insertit(string x ) {
 // the loop has worked its way up to the root, or until the currently being checked
 // ancestor is not changed.  
 void BSTY::adjustHeights(NodeT *n) {
-	if(n->parent->height>n->height){
+	NodeT *temp=n->parent;
+	if(temp==NULL){
+		return;
+	}
+	else if(temp->height>n->height){
 		return;
 	}
 	else{
-		NodeT *x=n->parent;
-		bool brk=true;
-		while(brk){
-			x->height++;
-			if(x->parent->height>x->height||x->parent==NULL){
-				brk=false;
-			}
-			x=x->parent;
-		}
+		temp->height++;
+		return adjustHeights(temp);
 	}
 }
 
@@ -65,6 +96,14 @@ void BSTY::printTreeIO() {
 // Use the slides, but make sure you can understand how the tree is 
 // traversed in order
 void BSTY::printTreeIO(NodeT *n) {
+	if(n==NULL){
+		return;
+	}
+	else{
+		printTreeIO(n->left);
+		n->printNode();
+		printTreeIO(n->right);
+	}
 }
 
 void BSTY::printTreePre() {
@@ -80,7 +119,14 @@ void BSTY::printTreePre() {
 // child.  Use the slides, but make sure you understand how a tree is traversed in
 // pre-order
 void BSTY::printTreePre(NodeT *n) {
-
+	if(n==NULL){
+		return;
+	}
+	else{
+		n->printNode();
+		printTreePre(n->left);
+		printTreePre(n->right);
+	}
 }
 
 void BSTY::printTreePost() {
@@ -97,7 +143,14 @@ void BSTY::printTreePost() {
 // Use the slides, but make sure you understand how a tree is traversed in
 // post-order
 void BSTY::printTreePost(NodeT *n) {
-
+	if(n==NULL){
+		return;
+	}
+	else{
+		printTreePost(n->left);
+		printTreePost(n->right);
+		n->printNode();
+	}
 }
 void BSTY::myPrint() {
 	if (root == NULL ) {
@@ -129,7 +182,53 @@ void BSTY::myPrint(NodeT *n) {
 // NOTE: If the node can't be found, this method prints out that x can't be found.
 // if it is found, the printNode method is called for the node.  
 NodeT *BSTY::find(string x) {
-
+	NodeT *a=root;
+	bool brk=true;
+	if(a->data==x){
+		brk=false;
+	}
+	else if(x<a->data){
+		a=a->left;
+		while(brk){
+			if(a==NULL){
+				brk=false;
+			}
+			else if(a->data==x){
+				brk=false;
+			}
+			else if(a->data>x){
+				a=a->left;
+			}
+			else{
+				a=a->right;
+			}
+		}
+	}
+	else if(a->data<x){
+		a=a->right;
+		cout<<a->data<<endl;
+		while(brk){
+			if(a==NULL){
+			brk=false;
+			}
+			else if(a->data==x){
+				brk=false;
+			}
+			else if(a->data>x){
+				a=a->left;
+			}
+			else{
+				a=a->right;
+			}
+		}
+	}
+	if(a==NULL){
+		cout<<x<<" Can't Be Found"<<endl;
+	}
+	else{
+		a->printNode();
+	}
+	return a;
 }
 
 /*************************************************************************************/
