@@ -231,6 +231,52 @@ NodeT *BSTY::find(string x) {
 	return a;
 }
 
+NodeT * BSTY::rotateRight(NodeT *n){
+	NodeT*temp=n->left;
+	if(n==root){
+		temp->right->parent=n;
+		n->left=temp->right;
+		n->parent=temp;
+		temp->right=n;
+		root=temp;
+		return temp;
+	}
+	else{
+		temp->right->parent=n;
+		n->left=temp->right;
+		temp->parent=n->parent;
+		n->parent=temp;
+		temp->right=n;
+		temp->parent->right=temp;
+		return temp;
+	}
+}
+
+NodeT * BSTY::rotateLeft(NodeT *n){
+	NodeT*temp=n->right;
+	if(n==root){
+		temp->left->parent=n;
+		n->right=temp->left;
+		n->parent=temp;
+		temp->left=n;
+		root=temp;
+		return temp;
+	}
+	else{
+		temp->left->parent=n;
+		n->right=temp->left;
+		temp->parent=n->parent;
+		n->parent=temp;
+		temp->left=n;
+		temp->parent->left=temp;
+		return temp;
+	}
+}
+
+int BSTY::findBalance(NodeT *n){
+	return n->left->height-n->right->height;
+}
+
 /*************************************************************************************/
 /* Extra Credit Methods                                                              */
 /* Challenging: worth 35 EC pts to go towards labs                                   */
